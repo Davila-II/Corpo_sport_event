@@ -1,6 +1,11 @@
 import { Route, Routes } from 'react-router-dom'
 import Layout from './components/layout/Layout'
 import Home from './pages/Home'
+import About from './pages/About'
+import Services from './pages/Services'
+import Events from './pages/Events'
+import Media from './pages/Media'
+import Contact from './pages/Contact'
 import Placeholder from './pages/Placeholder'
 
 export default function App() {
@@ -8,11 +13,11 @@ export default function App() {
     <Routes>
       <Route element={<Layout />}>
         <Route index element={<Home />} />
-        <Route path="a-propos" element={<Placeholder titleKey="nav.about" />} />
-        <Route path="domaines" element={<Placeholder titleKey="nav.services" />} />
-        <Route path="evenements" element={<Placeholder titleKey="nav.events" />} />
-        <Route path="mediatheque" element={<Placeholder titleKey="nav.media" />} />
-        <Route path="contact" element={<Placeholder titleKey="nav.contact" />} />
+        <Route path="a-propos" element={<About />} />
+        <Route path="domaines" element={<Services />} />
+        <Route path="evenements" element={<Events />} />
+        <Route path="mediatheque" element={<Media />} />
+        <Route path="contact" element={<Contact />} />
         <Route path="*" element={<Placeholder titleKey="common.notFound" />} />
       </Route>
     </Routes>
