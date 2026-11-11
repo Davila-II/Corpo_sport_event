@@ -30,7 +30,7 @@ export default function Contact() {
         titleWhite={t('contact.heroWhite')}
         titleBlue={t('contact.heroBlue')}
         subtitle={t('contact.heroSubtitle')}
-        image="/src/assets/images/accueil 2.jpg"
+        image="/accueil-1.jpg"
       />
 
       {/* Bloc principal avec les coordonnées à gauche et le formulaire à droite */}

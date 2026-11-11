@@ -21,7 +21,7 @@ export default function About() {
         titleWhite={t('about.heroWhite')}
         titleBlue={t('about.heroBlue')}
         subtitle={t('about.heroSubtitle')}
-        image="/src/assets/images/accueill 3.png"
+        image="/accueil-1.jpg"
       />
 
       {/* Mot du président */}

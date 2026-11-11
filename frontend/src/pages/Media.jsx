@@ -24,7 +24,7 @@ export default function MediaPage() {
         titleWhite={t('media.heroWhite')}
         titleBlue={t('media.heroBlue')}
         subtitle={t('media.heroSubtitle')}
-        image="/src/assets/images/accueill 3.png"
+        image="/accueil-1.jpg"
       />
 
       <section className="bg-white py-20 lg:py-28">

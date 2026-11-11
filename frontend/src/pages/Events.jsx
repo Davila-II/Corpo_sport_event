@@ -11,15 +11,40 @@ export default function Events() {
   const { data, loading, error } = useApi('/events')
   const [activeCategory, setActiveCategory] = useState('all')
 
-  if (!data) return <PageState loading={loading} error={error} />
+  if (!data && loading) return <PageState loading={loading} error={error} />
 
-  const events = data.events || data || []
+  // Normalise la liste des événements
+  const rawList = Array.isArray(data)
+    ? data
+    : Array.isArray(data?.data)
+    ? data.data
+    : Array.isArray(data?.events)
+    ? data.events
+    : []
+
+  const events = rawList
 
   const categories = ['all', 'football', 'basketball', 'futsal', 'culture']
   const filteredEvents =
     activeCategory === 'all'
       ? events
       : events.filter((e) => e.category === activeCategory)
+
+  const getFallbackImage = (event, idx) => {
+    const slugOrTitle = `${event.slug || ''} ${event.title || ''}`.toLowerCase()
+    if (slugOrTitle.includes('corpo-foot') || slugOrTitle.includes('corpo foot')) {
+      return '/accueil-1.jpg'
+    } else if (slugOrTitle.includes('corpo-basket') || slugOrTitle.includes('corpo basket')) {
+      return '/accueil-2.jpg'
+    } else if (slugOrTitle.includes('veteran') || slugOrTitle.includes('champions cup')) {
+      return '/accueil-4.jpeg'
+    } else if (idx === 0) {
+      return '/accueil-1.jpg'
+    } else if (idx === 1) {
+      return '/accueil-2.jpg'
+    }
+    return '/accueil-4.jpeg'
+  }
 
   return (
     <>
@@ -28,7 +53,7 @@ export default function Events() {
         titleWhite={t('events.heroWhite')}
         titleBlue={t('events.heroBlue')}
         subtitle={t('events.heroSubtitle')}
-        image="/src/assets/images/accueil 1.jpg"
+        image="/accueil-1.jpg"
       />
 
       <section className="bg-paper py-20 lg:py-28">
@@ -56,14 +81,14 @@ export default function Events() {
             </div>
           ) : (
             <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-              {filteredEvents.map((event) => (
+              {filteredEvents.map((event, idx) => (
                 <div
-                  key={event.id}
+                  key={event.id || idx}
                   className="group flex flex-col overflow-hidden border border-black/10 bg-white transition-all hover:shadow-xl"
                 >
                   <div className="relative aspect-[2.15/1] overflow-hidden bg-slate-100">
                     <Media
-                      src={event.cover_url}
+                      src={event.cover_url || getFallbackImage(event, idx)}
                       alt={event.title}
                       className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                     />

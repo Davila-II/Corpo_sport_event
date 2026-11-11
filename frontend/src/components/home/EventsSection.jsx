@@ -5,8 +5,9 @@ import Media from '../Media'
 import Eyebrow from '../Eyebrow'
 import Title from '../Title'
 
-function EventCard({ event }) {
+function EventCard({ event, fallbackImage }) {
   const { t } = useTranslation()
+  const imageSrc = event.cover_url || fallbackImage
 
   return (
     <Link
@@ -15,7 +16,7 @@ function EventCard({ event }) {
     >
       <div className="relative aspect-[2.15/1] overflow-hidden">
         <Media
-          src={event.cover_url}
+          src={imageSrc}
           alt={event.title}
           className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
         />
@@ -86,9 +87,35 @@ export default function EventsSection({ events }) {
         </div>
 
         <div className="mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {events.map((event) => (
-            <EventCard key={event.id} event={event} />
-          ))}
+          {events.map((event, idx) => {
+            let fallbackImage = '/accueil-1.jpg'
+            const slugOrTitle = `${event.slug || ''} ${event.title || ''}`.toLowerCase()
+            if (slugOrTitle.includes('corpo-foot') || slugOrTitle.includes('corpo foot')) {
+              fallbackImage = '/accueil-1.jpg'
+            } else if (slugOrTitle.includes('corpo-basket') || slugOrTitle.includes('corpo basket')) {
+              fallbackImage = '/accueil-2.jpg'
+            } else if (slugOrTitle.includes('veteran') || slugOrTitle.includes('champions cup')) {
+              fallbackImage = '/accueil-4.jpeg'
+            } else if (idx === 0) {
+              fallbackImage = '/accueil-1.jpg'
+            } else if (idx === 1) {
+              fallbackImage = '/accueil-2.jpg'
+            } else {
+              fallbackImage = '/accueil-4.jpeg'
+            }
+
+            return <EventCard key={event.id} event={event} fallbackImage={fallbackImage} />
+          })}
+        </div>
+
+        <div className="mt-14 flex justify-center">
+          <Link
+            to="/evenements"
+            className="inline-flex items-center gap-3 bg-navy px-8 py-4 text-xs font-bold uppercase tracking-wider text-white transition-colors hover:bg-sky hover:text-navy"
+          >
+            {t('cta.viewAllEvents')}
+            <ArrowRight size={16} />
+          </Link>
         </div>
       </div>
     </section>

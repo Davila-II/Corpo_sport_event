@@ -34,6 +34,22 @@ export default function Hero({ slides, stats }) {
 
   const slide = slides[index]
 
+  const defaultSlideImages = ['/accueil-1.jpg', '/accueil-2.jpg', '/accueil-3.png']
+  // Image spécifique par mot-clé dans les titres
+  const getSlideImage = (s, i) => {
+    const text = `${s.title_white || ''} ${s.title_blue || ''} ${s.eyebrow || ''}`.toLowerCase()
+    if (text.includes("cœur de l'action") || text.includes('heart of the action')) {
+      return '/accueil-1.jpg'
+    }
+    if (text.includes('passion') || text.includes('équipes') || text.includes('teams')) {
+      return '/accueil-2.jpg'
+    }
+    if (text.includes('héritage') || text.includes('legacy') || text.includes('2011')) {
+      return '/accueil-3.png'
+    }
+    return s.image_url || defaultSlideImages[i % defaultSlideImages.length]
+  }
+
   return (
     <section className="relative flex min-h-[calc(100svh-84px)] flex-col overflow-hidden bg-forest text-white">
       {slides.map((s, i) => (
@@ -43,7 +59,7 @@ export default function Hero({ slides, stats }) {
             i === index ? 'opacity-100' : 'opacity-0'
           }`}
         >
-          <Media src={s.image_url} className="h-full w-full object-cover" />
+          <Media src={getSlideImage(s, i)} className="h-full w-full object-cover" />
         </div>
       ))}
 

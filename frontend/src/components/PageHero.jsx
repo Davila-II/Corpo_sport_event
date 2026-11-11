@@ -7,7 +7,7 @@ export default function PageHero({
   titleWhite,
   titleBlue,
   subtitle,
-  image = '/src/assets/images/accueil 1.jpg',
+  image = '/accueil-1.jpg',
 }) {
   return (
     <section className="relative flex min-h-[460px] flex-col justify-center overflow-hidden bg-forest text-white lg:min-h-[520px]">

@@ -11,8 +11,8 @@ export default function Home() {
 
   if (!data) return <PageState loading={loading} error={error} />
 
-  // Pour l'instant l'image du bloc "Notre impact" est celle du dernier événement
-  const impactImage = data.events.at(-1)?.cover_url ?? null
+  // Image du bloc "Notre impact"
+  const impactImage = data.events.at(-1)?.cover_url || '/accueil-5.jpeg'
 
   return (
     <>

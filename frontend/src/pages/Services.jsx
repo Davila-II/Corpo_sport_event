@@ -24,7 +24,7 @@ export default function Services() {
         titleWhite={t('services.heroWhite')}
         titleBlue={t('services.heroBlue')}
         subtitle={t('services.heroSubtitle')}
-        image="/src/assets/images/accueil 2.jpg"
+        image="/accueil-1.jpg"
       />
 
       {/* Intro expertises */}
@@ -71,7 +71,7 @@ export default function Services() {
                   }`}
                 >
                   <Media
-                    src={service.image_url || '/src/assets/images/accueill 3.png'}
+                    src={service.image_url || `/accueil-${(idx % 4) + 1}.${idx === 2 ? 'png' : idx === 3 ? 'jpeg' : 'jpg'}`}
                     alt={service.title}
                     className="h-full w-full object-cover"
                   />
