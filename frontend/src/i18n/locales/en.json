@@ -1,0 +1,52 @@
+{
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "services": "Our services",
+    "events": "Events",
+    "media": "Gallery",
+    "contact": "Contact"
+  },
+  "cta": {
+    "projectTalk": "Let’s talk about your project",
+    "discoverEvents": "Discover our events",
+    "ourServices": "Our services",
+    "viewCompetition": "View the competition",
+    "ourStory": "Discover our story"
+  },
+  "home": {
+    "latestEvents": "Latest events",
+    "disciplineWhite": "Every discipline.",
+    "disciplineBlue": "A new emotion.",
+    "disciplineText": "Football, basketball, futsal or cultural events: discover the gatherings that bring corporate sport to life.",
+    "testimonial": "Testimonial",
+    "trusted": "They trust us"
+  },
+  "status": {
+    "ongoing": "Ongoing",
+    "upcoming": "Upcoming",
+    "finished": "Finished"
+  },
+  "category": {
+    "football": "Football",
+    "basketball": "Basketball",
+    "futsal": "Futsal",
+    "culture": "Culture"
+  },
+  "footer": {
+    "navigation": "Navigation",
+    "findUs": "Find us",
+    "rights": "© {{year}} Corpo Sport Event."
+  },
+  "common": {
+    "loading": "Loading…",
+    "error": "Unable to load the content right now.",
+    "retry": "Try again",
+    "previous": "Previous",
+    "next": "Next",
+    "notFound": "Page not found",
+    "underConstruction": "Page under construction",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu"
+  }
+}

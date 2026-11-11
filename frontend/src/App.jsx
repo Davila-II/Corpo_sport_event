@@ -1,15 +1,20 @@
+import { Route, Routes } from 'react-router-dom'
+import Layout from './components/layout/Layout'
+import Home from './pages/Home'
+import Placeholder from './pages/Placeholder'
+
 export default function App() {
   return (
-    <div className="min-h-screen bg-[#081B2C] flex flex-col items-center justify-center text-white">
-      <h1 className="font-display text-7xl font-bold uppercase">
-        Des équipes.
-      </h1>
-      <p className="font-display text-7xl font-bold italic uppercase text-sky-400">
-        Une même passion.
-      </p>
-      <p className="mt-6 font-sans text-lg text-white/70">
-        Corpo Sport Event : le frontend React fonctionne.
-      </p>
-    </div>
+    <Routes>
+      <Route element={<Layout />}>
+        <Route index element={<Home />} />
+        <Route path="a-propos" element={<Placeholder titleKey="nav.about" />} />
+        <Route path="domaines" element={<Placeholder titleKey="nav.services" />} />
+        <Route path="evenements" element={<Placeholder titleKey="nav.events" />} />
+        <Route path="mediatheque" element={<Placeholder titleKey="nav.media" />} />
+        <Route path="contact" element={<Placeholder titleKey="nav.contact" />} />
+        <Route path="*" element={<Placeholder titleKey="common.notFound" />} />
+      </Route>
+    </Routes>
   )
 }

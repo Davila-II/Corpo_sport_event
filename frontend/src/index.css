@@ -12,8 +12,41 @@
 @theme {
   --font-display: "Barlow Condensed", sans-serif;
   --font-sans: "DM Sans", sans-serif;
+
+  --color-navy: #071b2c;
+  --color-sky: #22a9de;
+  --color-sky-dark: #168fc2;
+  --color-forest: #04130d;
+  --color-paper: #f9faf7;
+  --color-mist: #f3f5f6;
+
+  --animate-marquee: marquee 40s linear infinite;
+
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+}
+
+/* Conteneur centré qui donne la largeur de contenu des captures */
+@utility wrap {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 1708px;
+  padding-inline: clamp(1.25rem, 4vw, 3rem);
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   font-family: var(--font-sans);
+  color: var(--color-navy);
+  background: #fff;
+  -webkit-font-smoothing: antialiased;
 }
