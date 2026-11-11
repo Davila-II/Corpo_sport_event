@@ -6,20 +6,21 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('contact_messages', function (Blueprint $table) {
             $table->id();
+            $table->string('full_name');
+            $table->string('company')->nullable();
+            $table->string('email');
+            $table->string('phone')->nullable();
+            $table->string('service_type')->nullable();
+            $table->text('message');
+            $table->timestamp('read_at')->nullable();
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('contact_messages');
