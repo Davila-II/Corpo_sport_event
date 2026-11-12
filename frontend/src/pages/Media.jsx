@@ -20,15 +20,30 @@ const MEDIA_PHOTOS = {
   'moments corpo sport event': '/mediatheque/Moments Corpo Sport Event.jpg',
 }
 
+const DEFAULT_PHOTO = '/mediatheque/Sertral Corpo Foot.jpg'
+
+// Forme de chaque carte selon le champ "Taille" de l'admin.
+// Les cartes ont des hauteurs différentes : c'est ce qui donne l'effet mosaïque.
+const CARD_RATIO = {
+  large: 'aspect-[3/2]',
+  medium: 'aspect-[4/3]',
+  tall: 'aspect-square',
+}
+
 function getCardPhoto(title) {
-  if (!title) return '/mediatheque/Sertral Corpo Foot.jpg'
+  if (!title) return DEFAULT_PHOTO
   const normalized = title.trim().toLowerCase()
-  for (const [key, path] of Object.entries(MEDIA_PHOTOS)) {
-    if (normalized.includes(key) || key.includes(normalized)) {
-      return path
-    }
-  }
-  return '/mediatheque/Sertral Corpo Foot.jpg'
+
+  // 1. Correspondance exacte : évite de confondre
+  //    "Finales Sertral Corpo Foot" avec "Sertral Corpo Foot"
+  if (MEDIA_PHOTOS[normalized]) return MEDIA_PHOTOS[normalized]
+
+  // 2. Sinon, on prend la clé la plus longue contenue dans le titre
+  const match = Object.keys(MEDIA_PHOTOS)
+    .filter((key) => normalized.includes(key))
+    .sort((a, b) => b.length - a.length)[0]
+
+  return match ? MEDIA_PHOTOS[match] : DEFAULT_PHOTO
 }
 
 export default function MediaPage() {
@@ -96,30 +111,43 @@ export default function MediaPage() {
             </p>
           </div>
 
-          {/* Grille des cartes avec les photos correspondantes */}
+          {/* Mosaïque : des cartes de hauteurs différentes qui s'emboîtent sans trou */}
           {groups.length === 0 ? (
             <div className="py-16 text-center text-navy/50">
               {t('media.empty')}
             </div>
           ) : (
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="columns-1 gap-6 sm:columns-2 lg:columns-3">
               {groups.map((group) => {
-                const isLarge = group.layout === 'large'
-                const isTall = group.layout === 'tall'
                 const cardImage = group.cover_url || getCardPhoto(group.title)
+                const ratio = CARD_RATIO[group.layout] || CARD_RATIO.medium
+
+                const openPhoto = () =>
+                  setFullscreenImage({
+                    src: cardImage,
+                    title: group.title,
+                    category: group.category,
+                    period: group.period_label,
+                  })
 
                 return (
                   <div
                     key={group.id}
-                    onClick={() => setFullscreenImage({ src: cardImage, title: group.title, category: group.category, period: group.period_label })}
-                    className={`group relative cursor-pointer overflow-hidden bg-forest text-white transition-all hover:shadow-2xl ${
-                      isLarge ? 'sm:col-span-2 aspect-[2/1]' : isTall ? 'aspect-[3/4]' : 'aspect-[4/3]'
-                    }`}
+                    role="button"
+                    tabIndex={0}
+                    onClick={openPhoto}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault()
+                        openPhoto()
+                      }
+                    }}
+                    className={`group relative mb-6 block w-full cursor-pointer break-inside-avoid overflow-hidden bg-forest text-white transition-shadow hover:shadow-2xl ${ratio}`}
                   >
                     <Media
                       src={cardImage}
                       alt={group.title}
-                      className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                      className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                     />
 
                     {/* Dégradé sombre pour lisibilité texte */}
