@@ -27,10 +27,18 @@ class SiteController extends Controller
     {
         $locale = app()->getLocale();
 
+        // Bloc "Notre impact" : on transforme le chemin de l'image en lien complet
+        $rawImpact = Setting::get('impact', []);
+        $impact = Localizer::localize($rawImpact, $locale);
+        $impact['image_url'] = ! empty($rawImpact['image'])
+            ? Storage::disk('public')->url($rawImpact['image'])
+            : null;
+        unset($impact['image']);
+
         return response()->json([
             'slides' => SlideResource::collection(Slide::active()->get()),
             'stats' => Localizer::localize(Setting::get('stats', []), $locale),
-            'impact' => Localizer::localize(Setting::get('impact', []), $locale),
+            'impact' => $impact,
             'events' => EventResource::collection(
                 Event::published()->where('show_on_home', true)->limit(3)->get()
             ),
