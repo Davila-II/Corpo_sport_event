@@ -146,7 +146,7 @@ export default function Contact() {
 
           {/* Colonne Formulaire */}
           <div>
-            <ContactFormSection services={services} />
+            <ContactFormSection services={services} isStandalone={false} />
           </div>
         </div>
       </section>

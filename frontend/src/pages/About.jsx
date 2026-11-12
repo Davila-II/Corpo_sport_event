@@ -27,27 +27,29 @@ export default function About() {
       {/* Mot du président */}
       {president && (
         <section className="bg-white py-20 lg:py-28">
-          <div className="wrap grid gap-12 lg:grid-cols-[1fr_1.4fr] lg:items-center lg:gap-20">
-            <div className="relative mx-auto flex max-w-sm flex-col items-center justify-center p-8 bg-paper border border-black/5 rounded-full aspect-square w-full shadow-inner">
-              {president.photo_url ? (
-                <Media
-                  src={president.photo_url}
-                  alt={president.name}
-                  className="h-44 w-44 rounded-full object-cover"
-                />
-              ) : (
-                <img
-                  src="/logo.png"
-                  alt="Corpo Sport Event"
-                  className="h-40 w-40 object-contain"
-                />
-              )}
-              <h4 className="mt-4 font-display text-lg font-bold uppercase text-navy">
-                {president.name}
-              </h4>
-              <p className="text-[10px] uppercase tracking-widest text-navy/50">
-                {president.role}
-              </p>
+          <div className="wrap grid gap-12 lg:grid-cols-[1fr_1.35fr] lg:items-center lg:gap-20">
+            <div className="bg-[#f8f9fa] p-8 md:p-12 flex items-center justify-center">
+              <div className="relative flex flex-col items-center justify-center p-8 bg-white rounded-full aspect-square w-full max-w-[340px] shadow-sm border border-black/5">
+                {president.photo_url ? (
+                  <Media
+                    src={president.photo_url}
+                    alt={president.name}
+                    className="h-36 w-36 rounded-full object-cover"
+                  />
+                ) : (
+                  <img
+                    src="/logo.png"
+                    alt="Corpo Sport Event"
+                    className="h-36 w-36 object-contain"
+                  />
+                )}
+                <h4 className="mt-4 font-display text-base font-bold uppercase text-navy tracking-wider text-center">
+                  {president.name}
+                </h4>
+                <p className="text-[10px] uppercase tracking-widest text-navy/40 text-center">
+                  {president.role}
+                </p>
+              </div>
             </div>
 
             <div className="space-y-6">
@@ -58,10 +60,10 @@ export default function About() {
                 dark
                 className="text-[clamp(2.5rem,4.5vw,4.5rem)]"
               />
-              <div className="whitespace-pre-line text-base leading-relaxed text-navy/70">
+              <div className="whitespace-pre-line text-sm leading-relaxed text-navy/70 md:text-base">
                 {president.text}
               </div>
-              <p className="font-display text-xl font-bold uppercase text-navy">
+              <p className="font-display text-xl font-bold uppercase text-navy pt-2">
                 {president.name}
               </p>
             </div>
@@ -125,20 +127,20 @@ export default function About() {
               />
             </div>
 
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
               {values.map((v, i) => (
                 <div
                   key={v.title}
-                  className="flex flex-col justify-between border border-black/10 bg-paper p-8 transition-shadow hover:shadow-md min-h-[220px]"
+                  className="flex flex-col justify-between border border-black/10 bg-white p-8 transition-shadow hover:shadow-lg min-h-[300px]"
                 >
-                  <span className="font-display text-2xl font-bold text-sky">
+                  <span className="font-display text-xl font-bold text-sky">
                     {String(i + 1).padStart(2, '0')}
                   </span>
-                  <div>
-                    <h3 className="font-display text-2xl font-bold uppercase text-navy mb-2">
+                  <div className="mt-12">
+                    <h3 className="font-display text-2xl font-bold uppercase text-navy mb-3">
                       {v.title}
                     </h3>
-                    <p className="text-sm text-navy/70 leading-relaxed">{v.text}</p>
+                    <p className="text-xs text-navy/70 leading-relaxed">{v.text}</p>
                   </div>
                 </div>
               ))}

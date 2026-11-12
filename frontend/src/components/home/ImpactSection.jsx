@@ -11,11 +11,12 @@ export default function ImpactSection({ impact, image }) {
   if (!impact?.title_white) return null
 
   const pillars = impact.pillars ?? []
+  const imageSrc = image || '/accueil-5.jpeg'
 
   return (
     <section className="grid bg-navy text-white lg:grid-cols-2">
-      <div className="min-h-[320px] lg:min-h-[640px]">
-        <Media src={image} className="h-full w-full object-cover" />
+      <div className="relative min-h-[360px] lg:min-h-[640px]">
+        <Media src={imageSrc} className="h-full w-full object-cover" />
       </div>
 
       <div className="flex flex-col justify-center px-6 py-16 lg:px-20 lg:py-24">

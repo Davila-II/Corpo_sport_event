@@ -14,15 +14,15 @@ export default function Testimonials({ items }) {
   const go = (step) => setIndex((i) => (i + step + items.length) % items.length)
 
   const arrowClass =
-    'flex h-10 w-10 items-center justify-center border border-navy/20 text-navy transition-colors hover:border-navy hover:bg-navy hover:text-white'
+    'flex h-10 w-10 items-center justify-center border border-navy/20 bg-white text-navy transition-colors hover:border-navy hover:bg-navy hover:text-white'
 
   return (
-    <section className="bg-mist py-24">
+    <section className="bg-white py-24">
       <div className="wrap relative">
-        <div className="grid gap-6 lg:grid-cols-[120px_1fr] lg:gap-10">
+        <div className="grid gap-6 lg:grid-cols-[80px_1fr] lg:gap-10">
           <div
             aria-hidden="true"
-            className="hidden font-display text-[10rem] font-bold leading-[0.8] text-sky lg:block"
+            className="hidden font-display text-8xl font-black leading-none text-sky lg:block select-none"
           >
             “
           </div>
@@ -32,7 +32,7 @@ export default function Testimonials({ items }) {
 
             <blockquote
               key={current.id}
-              className="mt-8 font-display text-[clamp(1.9rem,3.6vw,3.5rem)] font-semibold uppercase leading-[1.1] text-navy"
+              className="mt-8 font-display text-[clamp(1.9rem,3.6vw,3.5rem)] font-bold uppercase leading-[1.08] text-navy"
             >
               {current.quote}
             </blockquote>
