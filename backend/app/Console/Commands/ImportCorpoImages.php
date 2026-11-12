@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\Event;
 use App\Models\MediaGroup;
+use App\Models\Service;
 use App\Models\Slide;
 use Illuminate\Console\Command;
 use Illuminate\Http\File;
@@ -14,7 +15,7 @@ class ImportCorpoImages extends Command
 {
     protected $signature = 'corpo:import-images {--force : Remplace aussi les images déjà enregistrées}';
 
-    protected $description = 'Importe les images de frontend/public dans l\'admin (slides, événements, galeries)';
+    protected $description = 'Importe les images de frontend/public dans l\'admin (slides, événements, services, galeries)';
 
     private string $source = '';
 
@@ -30,6 +31,7 @@ class ImportCorpoImages extends Command
 
         $this->importSlides();
         $this->importEvents();
+        $this->importServices();
         $this->importGroups();
 
         $this->info('Terminé.');
@@ -39,7 +41,8 @@ class ImportCorpoImages extends Command
 
     // Copie un fichier de frontend/public vers le stockage public de Laravel.
     // Renvoie le chemin enregistré (ex : "slides/accueil-1.jpg") ou null.
-    private function store(string $relative, string $directory): ?string
+    // $suffix permet de donner à chaque contenu sa propre copie du fichier.
+    private function store(string $relative, string $directory, ?string $suffix = null): ?string
     {
         $path = $this->source . '/' . $relative;
 
@@ -50,7 +53,9 @@ class ImportCorpoImages extends Command
         }
 
         $info = pathinfo($relative);
-        $name = Str::slug($info['filename']) . '.' . strtolower($info['extension'] ?? 'jpg');
+        $name = Str::slug($info['filename'])
+            . ($suffix ? '-' . $suffix : '')
+            . '.' . strtolower($info['extension'] ?? 'jpg');
 
         return Storage::disk('public')->putFileAs($directory, new File($path), $name) ?: null;
     }
@@ -100,6 +105,30 @@ class ImportCorpoImages extends Command
             if ($path = $this->store($file, 'events')) {
                 $event->update(['cover_image' => $path]);
                 $this->line("  {$slug} <- {$file}");
+            }
+        }
+    }
+
+    private function importServices(): void
+    {
+        $this->line('Services (domaines d\'activités)');
+
+        // Même correspondance que le secours de Services.jsx :
+        // 1er service = accueil-1, 2e = accueil-2, 3e = accueil-3.png, 4e = accueil-4.jpeg, puis on recommence
+        $files = ['accueil-1.jpg', 'accueil-2.jpg', 'accueil-3.png', 'accueil-4.jpeg'];
+        $services = Service::orderBy('sort_order')->orderBy('id')->get();
+
+        foreach ($services as $i => $service) {
+            if (! $this->shouldSet($service->image)) {
+                continue;
+            }
+
+            $file = $files[$i % count($files)];
+            $title = $service->localized('title', 'fr');
+
+            if ($path = $this->store($file, 'services', 'service-' . $service->id)) {
+                $service->update(['image' => $path]);
+                $this->line("  {$title} <- {$file}");
             }
         }
     }

@@ -11,8 +11,12 @@ export default function Home() {
 
   if (!data) return <PageState loading={loading} error={error} />
 
-  // Image du bloc "Notre impact"
-  const impactImage = data.events.at(-1)?.cover_url || '/accueil-5.jpeg'
+  // Image du bloc "Notre impact" :
+  // 1. celle uploadée dans l'admin (Réglages du site > Accueil)
+  // 2. sinon la couverture du dernier événement
+  // 3. sinon l'image de secours
+  const impactImage =
+    data.impact?.image_url || data.events.at(-1)?.cover_url || '/accueil-5.jpeg'
 
   return (
     <>
