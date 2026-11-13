@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Support\Localizer;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -20,6 +21,10 @@ class EventResource extends JsonResource
             'period_label' => $this->period_label,
             'edition_label' => $this->localized('edition_label'),
             'cover_url' => $this->cover_url,
+            // Éditions répertoriées, déjà traduites dans la langue demandée
+            'editions' => array_values(
+                Localizer::localize($this->editions ?? [], app()->getLocale())
+            ),
         ];
     }
 }

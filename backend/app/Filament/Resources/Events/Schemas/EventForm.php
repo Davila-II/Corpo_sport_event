@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Events\Schemas;
 
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -98,6 +99,33 @@ class EventForm
                             ->label('Ordre d\'affichage')
                             ->numeric()
                             ->default(0),
+                    ]),
+
+                Section::make('Éditions répertoriées (page Événements)')
+                    ->columnSpanFull()
+                    ->schema([
+                        Repeater::make('editions')
+                            ->label('Éditions')
+                            ->addActionLabel('Ajouter une édition')
+                            ->collapsible()
+                            ->defaultItems(0)
+                            ->itemLabel(fn (array $state): ?string => trim(
+                                ($state['period'] ?? '') . ' — ' . ($state['title']['fr'] ?? '')
+                            ))
+                            ->columns(3)
+                            ->schema([
+                                TextInput::make('period')
+                                    ->label('Année ou période (ex : 2018 ou 2022-23)')
+                                    ->required()
+                                    ->maxLength(30),
+                                TextInput::make('title.fr')
+                                    ->label('Intitulé (FR)')
+                                    ->required()
+                                    ->maxLength(255),
+                                TextInput::make('title.en')
+                                    ->label('Title (EN)')
+                                    ->maxLength(255),
+                            ]),
                     ]),
 
                 Section::make('Image et publication')

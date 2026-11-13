@@ -13,7 +13,7 @@ class Event extends Model
 
     protected $fillable = [
         'slug', 'title', 'description', 'category', 'status', 'city',
-        'period_label', 'edition_label', 'cover_image',
+        'period_label', 'edition_label', 'editions', 'cover_image',
         'show_on_home', 'is_published', 'sort_order',
     ];
 
@@ -21,6 +21,7 @@ class Event extends Model
         'title' => 'array',
         'description' => 'array',
         'edition_label' => 'array',
+        'editions' => 'array',
         'show_on_home' => 'boolean',
         'is_published' => 'boolean',
     ];
