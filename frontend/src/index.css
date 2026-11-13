@@ -35,9 +35,7 @@
 /* Conteneur centré qui donne la largeur de contenu des captures */
 @utility wrap {
   margin-inline: auto;
-  width: 100%;
-  max-width: 1708px;
-  padding-inline: clamp(1.25rem, 4vw, 3rem);
+  width: min(1612px, 100% - 16vw);
 }
 
 html {

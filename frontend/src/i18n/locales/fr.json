@@ -95,7 +95,8 @@
     "facebookLabel": "FACEBOOK",
     "socialBanner": "Suivez nos compétitions, les résultats et les coulisses sur nos réseaux sociaux.",
     "success": "Votre message a bien été envoyé ! Nous vous répondrons dans les plus brefs délais.",
-    "sending": "Envoi en cours…"
+    "sending": "Envoi en cours…",
+    "sendDemand": "Envoyer ma demande"
   },
   "home": {
     "latestEvents": "Derniers événements",

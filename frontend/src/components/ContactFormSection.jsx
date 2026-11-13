@@ -1,8 +1,16 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { ArrowRight } from 'lucide-react'
 import { api } from '../lib/api'
 import Eyebrow from './Eyebrow'
 import Title from './Title'
+
+// Style commun des champs : fond blanc, texte et placeholder petits
+const FIELD =
+  'w-full border border-black/15 bg-white px-4 py-3 text-xs text-navy outline-none placeholder:text-[11px] placeholder:font-semibold placeholder:text-navy/40 focus:border-sky'
+
+const LABEL =
+  'mb-2 block text-[9.5px] font-bold uppercase tracking-[0.08em] text-navy'
 
 export default function ContactFormSection({ services = [], isStandalone = true }) {
   const { t } = useTranslation()
@@ -51,85 +59,75 @@ export default function ContactFormSection({ services = [], isStandalone = true 
   }
 
   const formCard = (
-    <div className="border border-black/10 bg-white p-8 shadow-sm lg:p-12">
+    <div className="bg-mist p-9 shadow-[0_24px_60px_rgba(7,27,44,0.10)]">
       {success ? (
-        <div className="bg-sky/10 border-l-4 border-sky p-6 text-navy">
+        <div className="border-l-4 border-sky bg-sky/10 p-6 text-navy">
           <h4 className="font-display text-xl font-bold uppercase">{t('contact.success')}</h4>
         </div>
       ) : (
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-5">
           {errorMsg && (
-            <div className="bg-red-50 p-4 text-sm text-red-600 border border-red-200">
+            <div className="border border-red-200 bg-red-50 p-4 text-sm text-red-600">
               {errorMsg}
             </div>
           )}
 
-          <div className="grid gap-6 md:grid-cols-2">
+          <div className="grid gap-5 min-[900px]:grid-cols-2">
             <div>
-              <label className="block text-[11px] font-bold uppercase tracking-wider text-navy/70 mb-2">
-                {t('contact.fullName')}
-              </label>
+              <label className={LABEL}>{t('contact.fullName')}</label>
               <input
                 type="text"
                 required
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 placeholder={t('contact.fullNamePlaceholder')}
-                className="w-full border border-black/15 bg-paper px-4 py-3 text-sm text-navy outline-none focus:border-sky"
+                className={FIELD}
               />
             </div>
 
             <div>
-              <label className="block text-[11px] font-bold uppercase tracking-wider text-navy/70 mb-2">
-                {t('contact.company')}
-              </label>
+              <label className={LABEL}>{t('contact.company')}</label>
               <input
                 type="text"
                 value={formData.company}
                 onChange={(e) => setFormData({ ...formData, company: e.target.value })}
                 placeholder={t('contact.companyPlaceholder')}
-                className="w-full border border-black/15 bg-paper px-4 py-3 text-sm text-navy outline-none focus:border-sky"
+                className={FIELD}
               />
             </div>
           </div>
 
-          <div className="grid gap-6 md:grid-cols-2">
+          <div className="grid gap-5 min-[900px]:grid-cols-2">
             <div>
-              <label className="block text-[11px] font-bold uppercase tracking-wider text-navy/70 mb-2">
-                {t('contact.email')}
-              </label>
+              <label className={LABEL}>{t('contact.email')}</label>
               <input
                 type="email"
                 required
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 placeholder={t('contact.emailPlaceholder')}
-                className="w-full border border-black/15 bg-paper px-4 py-3 text-sm text-navy outline-none focus:border-sky"
+                className={FIELD}
               />
             </div>
 
             <div>
-              <label className="block text-[11px] font-bold uppercase tracking-wider text-navy/70 mb-2">
-                {t('contact.phone')}
-              </label>
+              <label className={LABEL}>{t('contact.phone')}</label>
               <input
                 type="tel"
                 value={formData.phone}
                 onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                 placeholder={t('contact.phonePlaceholder')}
-                className="w-full border border-black/15 bg-paper px-4 py-3 text-sm text-navy outline-none focus:border-sky"
+                className={FIELD}
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-[11px] font-bold uppercase tracking-wider text-navy/70 mb-2">
-              {t('contact.serviceType')}
-            </label>
+            <label className={LABEL}>{t('contact.serviceType')}</label>
             <select
               value={formData.service_id}
               onChange={(e) => setFormData({ ...formData, service_id: e.target.value })}
-              className="w-full border border-black/15 bg-paper px-4 py-3 text-sm text-navy outline-none focus:border-sky"
+              className={`${FIELD} font-semibold`}
             >
               <option value="">{t('contact.selectService')}</option>
               {services.map((s) => (
@@ -142,25 +140,24 @@ export default function ContactFormSection({ services = [], isStandalone = true 
           </div>
 
           <div>
-            <label className="block text-[11px] font-bold uppercase tracking-wider text-navy/70 mb-2">
-              {t('contact.yourProject')}
-            </label>
+            <label className={LABEL}>{t('contact.yourProject')}</label>
             <textarea
               required
               rows={4}
               value={formData.project}
               onChange={(e) => setFormData({ ...formData, project: e.target.value })}
               placeholder={t('contact.projectPlaceholder')}
-              className="w-full border border-black/15 bg-paper px-4 py-3 text-sm text-navy outline-none focus:border-sky"
+              className={FIELD}
             ></textarea>
           </div>
 
           <button
             type="submit"
             disabled={submitting}
-            className="w-full bg-sky py-4 text-center text-sm font-bold uppercase tracking-wider text-navy transition-colors hover:bg-navy hover:text-white disabled:opacity-50"
+            className="flex w-full items-center justify-center gap-3 bg-sky py-4 text-xs font-bold text-navy transition-colors hover:bg-navy hover:text-white disabled:opacity-50"
           >
-            {submitting ? t('contact.sending') : t('contact.sendDemand')} &rarr;
+            {submitting ? t('contact.sending') : t('contact.sendDemand')}
+            <ArrowRight size={16} />
           </button>
         </form>
       )}
@@ -173,16 +170,18 @@ export default function ContactFormSection({ services = [], isStandalone = true 
 
   return (
     <section className="bg-paper py-20 lg:py-28">
-      <div className="wrap grid gap-14 lg:grid-cols-[1fr_1.15fr] lg:items-start lg:gap-20">
-        <div className="space-y-6">
-          <Eyebrow>{t('contact.sectionEyebrow')}</Eyebrow>
-          <Title
-            white={t('contact.sectionWhite')}
-            blue={t('contact.sectionBlue')}
-            dark
-            className="text-[clamp(2.5rem,4.5vw,4.5rem)]"
-          />
-          <p className="max-w-md text-base leading-relaxed text-navy/70">
+      <div className="wrap grid gap-12 md:grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] md:items-start md:gap-14 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.35fr)] lg:gap-24">
+        <div>
+          <div className="space-y-6">
+            <Eyebrow>{t('contact.sectionEyebrow')}</Eyebrow>
+            <Title
+              white={t('contact.sectionWhite')}
+              blue={t('contact.sectionBlue')}
+              dark
+              className="text-[clamp(2.25rem,6vw,4.75rem)]"
+            />
+          </div>
+          <p className="mt-4 max-w-md text-base leading-relaxed text-navy/70">
             {t('contact.sectionSubtitle')}
           </p>
         </div>
