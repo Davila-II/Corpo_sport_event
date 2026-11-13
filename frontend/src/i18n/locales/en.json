@@ -52,7 +52,16 @@
     "heroBlue": "AT THE HEART OF PLAY.",
     "heroSubtitle": "Discover all our tournaments, inter-company challenges and athletic gatherings in Cameroon.",
     "allFilter": "All",
-    "empty": "No events found."
+    "empty": "No events found.",
+    "searchPlaceholder": "Search by title…",
+    "allCities": "All cities",
+    "allCategories": "All categories",
+    "results": "{{count}} result(s)",
+    "legendOngoing": "Ongoing",
+    "legendUpcoming": "Upcoming",
+    "legendArchives": "Archive",
+    "editionsListed": "Listed editions",
+    "noEditions": "No editions listed yet."
   },
   "media": {
     "heroEyebrow": "PHOTOS & ARCHIVES",

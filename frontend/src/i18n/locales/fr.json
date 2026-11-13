@@ -52,7 +52,16 @@
     "heroBlue": "AU CŒUR DU JEU.",
     "heroSubtitle": "Retrouvez l’ensemble de nos tournois, challenges interentreprises et rencontres sportives au Cameroun.",
     "allFilter": "Tous",
-    "empty": "Aucun événement trouvé."
+    "empty": "Aucun événement trouvé.",
+    "searchPlaceholder": "Rechercher par titre…",
+    "allCities": "Toutes les villes",
+    "allCategories": "Toutes les catégories",
+    "results": "{{count}} résultat(s)",
+    "legendOngoing": "En cours",
+    "legendUpcoming": "À venir",
+    "legendArchives": "Archives",
+    "editionsListed": "Éditions répertoriées",
+    "noEditions": "Aucune édition répertoriée pour le moment."
   },
   "media": {
     "heroEyebrow": "PHOTOS & ARCHIVES",

@@ -1,50 +1,231 @@
-import { useState } from 'react'
+import { Fragment, useMemo, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { Calendar, MapPin } from 'lucide-react'
+import {
+  ArrowRight,
+  Calendar,
+  ChevronDown,
+  ChevronRight,
+  MapPin,
+  Search,
+} from 'lucide-react'
 import { useApi } from '../lib/api'
 import PageState from '../components/PageState'
 import PageHero from '../components/PageHero'
 import Media from '../components/Media'
 
+const CATEGORIES = ['football', 'basketball', 'futsal', 'culture']
+
+// Filtres de statut affichés à droite du compteur
+const STATUS_FILTERS = [
+  { value: 'ongoing', key: 'events.legendOngoing' },
+  { value: 'upcoming', key: 'events.legendUpcoming' },
+  { value: 'finished', key: 'events.legendArchives' },
+]
+
+const STATUS_BADGE = {
+  ongoing: 'bg-sky-dark',
+  upcoming: 'bg-sky',
+  finished: 'bg-[#4b5b54]',
+}
+
+// Recherche sans tenir compte des accents ni des majuscules
+const normalize = (text = '') =>
+  text
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .trim()
+
+// Image de secours quand aucune couverture n'est enregistrée dans l'admin
+function getFallbackImage(event) {
+  const key = `${event.slug || ''} ${event.title || ''}`.toLowerCase()
+
+  if (key.includes('foot-salle') || key.includes('futsal')) return '/accueil-5.jpeg'
+  if (key.includes('award')) return '/mediatheque/Moments Corpo Sport Event.jpg'
+  if (key.includes('corpo-foot') || key.includes('corpo foot')) return '/accueil-2.jpg'
+  if (key.includes('corpo-basket') || key.includes('corpo basket')) return '/accueil-1.jpg'
+  if (key.includes('veteran') || key.includes('champions cup')) return '/accueil-4.jpeg'
+
+  if (event.category === 'basketball') return '/accueil-1.jpg'
+  if (event.category === 'football') return '/accueil-2.jpg'
+  return '/accueil-4.jpeg'
+}
+
+function FilterSelect({ value, onChange, label, children }) {
+  return (
+    <div className="relative md:w-[206px]">
+      <select
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        aria-label={label}
+        className="h-[43px] w-full appearance-none border border-black/15 bg-white px-4 pr-9 text-[11px] text-navy outline-none focus:border-sky"
+      >
+        {children}
+      </select>
+      <ChevronDown
+        size={12}
+        className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-navy"
+      />
+    </div>
+  )
+}
+
+function EventBlock({ event }) {
+  const { t } = useTranslation()
+  const editions = Array.isArray(event.editions) ? event.editions : []
+
+  return (
+    <article id={event.slug} className="border-t border-black/10 pt-9">
+      {/* Ligne de titre : catégorie, nom, numéro d'édition */}
+      <header className="flex flex-col gap-2 pb-5 sm:grid sm:grid-cols-[135px_1fr_auto] sm:items-end sm:gap-x-4">
+        <span className="pb-1.5 text-[9px] font-bold uppercase tracking-[0.18em] text-sky-dark">
+          {t(`category.${event.category}`)}
+        </span>
+        <h2 className="font-display text-4xl font-semibold uppercase leading-none text-navy md:text-[2.6rem]">
+          {event.title}
+        </h2>
+        {event.edition_label && (
+          <span className="pb-1.5 text-[10px] font-bold uppercase text-navy/60">
+            {event.edition_label}
+          </span>
+        )}
+      </header>
+
+      <div className="grid bg-white md:grid-cols-[300px_1fr] lg:grid-cols-[21%_1fr]">
+        {/* Carte de la compétition */}
+        <div className="flex flex-col border-black/10 md:border-r">
+          <div className="relative aspect-[1.4/1] overflow-hidden bg-forest">
+            <Media
+              src={event.cover_url || getFallbackImage(event)}
+              alt={event.title}
+              className="h-full w-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
+
+            <span
+              className={`absolute left-4 top-4 px-2.5 py-1.5 text-[8px] font-bold uppercase tracking-[0.15em] text-white ${
+                STATUS_BADGE[event.status] || 'bg-sky'
+              }`}
+            >
+              {t(`status.${event.status}`)}
+            </span>
+
+            <span className="absolute bottom-3 left-4 text-[8px] font-bold uppercase tracking-[0.2em] text-white">
+              {t(`category.${event.category}`)}
+            </span>
+          </div>
+
+          <div className="flex flex-1 flex-col p-5">
+            <div className="flex flex-wrap items-center gap-4 text-[8px] uppercase tracking-wider text-navy/50">
+              {event.city && (
+                <span className="flex items-center gap-1.5">
+                  <MapPin size={11} /> {event.city}
+                </span>
+              )}
+              {event.period_label && (
+                <span className="flex items-center gap-1.5">
+                  <Calendar size={11} /> {event.period_label}
+                </span>
+              )}
+            </div>
+
+            <h3 className="mt-4 font-display text-[26px] font-semibold uppercase leading-none text-navy">
+              {event.title}
+            </h3>
+
+            {event.description && (
+              <p className="mt-3 flex-1 text-xs leading-[1.5] text-navy/60">
+                {event.description}
+              </p>
+            )}
+
+            <Link
+              to="/mediatheque"
+              className="group mt-5 flex items-center justify-between border-t border-black/10 pt-4 text-[10px] font-bold text-navy transition-colors hover:text-sky"
+            >
+              {t('cta.viewCompetition')}
+              <ArrowRight
+                size={14}
+                className="transition-transform group-hover:translate-x-1"
+              />
+            </Link>
+          </div>
+        </div>
+
+        {/* Éditions répertoriées */}
+        <div className="p-6 pt-8 md:p-8 md:pt-9">
+          <p className="text-[8px] uppercase tracking-[0.2em] text-navy/45">
+            {t('events.editionsListed')}
+          </p>
+
+          {editions.length > 0 ? (
+            <ul className="mt-5">
+              {editions.map((edition, i) => (
+                <li
+                  key={`${edition.period}-${i}`}
+                  className="flex items-center border-t border-black/10 py-[18px]"
+                >
+                  <span className="w-20 shrink-0 font-display text-2xl font-semibold leading-none text-sky sm:w-[102px]">
+                    {edition.period}
+                  </span>
+                  <span className="flex-1 text-[11px] font-bold text-navy">
+                    {edition.title}
+                  </span>
+                  <ChevronRight size={14} className="shrink-0 text-navy" />
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="mt-5 border-t border-black/10 pt-5 text-xs text-navy/50">
+              {t('events.noEditions')}
+            </p>
+          )}
+        </div>
+      </div>
+    </article>
+  )
+}
+
 export default function Events() {
   const { t } = useTranslation()
   const { data, loading, error } = useApi('/events')
-  const [activeCategory, setActiveCategory] = useState('all')
 
-  if (!data && loading) return <PageState loading={loading} error={error} />
+  const [query, setQuery] = useState('')
+  const [city, setCity] = useState('')
+  const [category, setCategory] = useState('')
+  const [status, setStatus] = useState('')
 
   // Normalise la liste des événements
-  const rawList = Array.isArray(data)
-    ? data
-    : Array.isArray(data?.data)
-    ? data.data
-    : Array.isArray(data?.events)
-    ? data.events
-    : []
+  const events = useMemo(() => {
+    if (Array.isArray(data)) return data
+    if (Array.isArray(data?.data)) return data.data
+    if (Array.isArray(data?.events)) return data.events
+    return []
+  }, [data])
 
-  const events = rawList
+  // Les villes proposées dans le filtre viennent des événements eux-mêmes
+  const cities = useMemo(
+    () =>
+      [...new Set(events.map((e) => e.city).filter(Boolean))].sort((a, b) =>
+        a.localeCompare(b),
+      ),
+    [events],
+  )
 
-  const categories = ['all', 'football', 'basketball', 'futsal', 'culture']
-  const filteredEvents =
-    activeCategory === 'all'
-      ? events
-      : events.filter((e) => e.category === activeCategory)
+  const filtered = useMemo(() => {
+    const q = normalize(query)
 
-  const getFallbackImage = (event, idx) => {
-    const slugOrTitle = `${event.slug || ''} ${event.title || ''}`.toLowerCase()
-    if (slugOrTitle.includes('corpo-foot') || slugOrTitle.includes('corpo foot')) {
-      return '/accueil-1.jpg'
-    } else if (slugOrTitle.includes('corpo-basket') || slugOrTitle.includes('corpo basket')) {
-      return '/accueil-2.jpg'
-    } else if (slugOrTitle.includes('veteran') || slugOrTitle.includes('champions cup')) {
-      return '/accueil-4.jpeg'
-    } else if (idx === 0) {
-      return '/accueil-1.jpg'
-    } else if (idx === 1) {
-      return '/accueil-2.jpg'
-    }
-    return '/accueil-4.jpeg'
-  }
+    return events.filter(
+      (e) =>
+        (!q || normalize(e.title).includes(q)) &&
+        (!city || e.city === city) &&
+        (!category || e.category === category) &&
+        (!status || e.status === status),
+    )
+  }, [events, query, city, category, status])
+
+  if (!data) return <PageState loading={loading} error={error} />
 
   return (
     <>
@@ -56,88 +237,82 @@ export default function Events() {
         image="/accueil-1.jpg"
       />
 
-      <section className="bg-paper py-20 lg:py-28">
+      <section className="bg-paper py-20 lg:py-24">
         <div className="wrap">
-          {/* Filtres par catégorie */}
-          <div className="flex flex-wrap items-center gap-3 border-b border-black/10 pb-6 mb-12">
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => setActiveCategory(cat)}
-                className={`px-5 py-2.5 text-xs font-bold uppercase tracking-wider transition-all ${
-                  activeCategory === cat
-                    ? 'bg-navy text-white shadow-sm'
-                    : 'bg-white text-navy/70 hover:bg-black/5 hover:text-navy border border-black/10'
-                }`}
-              >
-                {cat === 'all' ? t('events.allFilter') : t(`category.${cat}`)}
-              </button>
-            ))}
+          {/* Barre de recherche et filtres */}
+          <div className="flex flex-col gap-3 border border-black/10 bg-white p-4 md:flex-row">
+            <label className="relative flex-1">
+              <Search
+                size={14}
+                className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-navy/60"
+              />
+              <input
+                type="text"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder={t('events.searchPlaceholder')}
+                aria-label={t('events.searchPlaceholder')}
+                className="h-[43px] w-full border border-black/15 bg-white pl-10 pr-4 text-[11px] text-navy outline-none placeholder:text-navy/45 focus:border-sky"
+              />
+            </label>
+
+            <FilterSelect value={city} onChange={setCity} label={t('events.allCities')}>
+              <option value="">{t('events.allCities')}</option>
+              {cities.map((c) => (
+                <option key={c} value={c}>
+                  {c}
+                </option>
+              ))}
+            </FilterSelect>
+
+            <FilterSelect
+              value={category}
+              onChange={setCategory}
+              label={t('events.allCategories')}
+            >
+              <option value="">{t('events.allCategories')}</option>
+              {CATEGORIES.map((c) => (
+                <option key={c} value={c}>
+                  {t(`category.${c}`)}
+                </option>
+              ))}
+            </FilterSelect>
           </div>
 
-          {filteredEvents.length === 0 ? (
-            <div className="py-16 text-center text-navy/50">
+          {/* Compteur et filtres de statut */}
+          <div className="flex flex-wrap items-center justify-between gap-3 py-5 text-[8px] font-medium uppercase tracking-[0.2em]">
+            <span className="text-navy/50">
+              {t('events.results', { count: filtered.length })}
+            </span>
+
+            <div className="flex items-center gap-2 font-bold text-sky-dark">
+              {STATUS_FILTERS.map((s, i) => (
+                <Fragment key={s.value}>
+                  {i > 0 && <span aria-hidden="true">·</span>}
+                  <button
+                    type="button"
+                    aria-pressed={status === s.value}
+                    onClick={() => setStatus(status === s.value ? '' : s.value)}
+                    className={`uppercase tracking-[0.2em] transition-colors hover:text-navy ${
+                      status === s.value ? 'text-navy underline underline-offset-4' : ''
+                    }`}
+                  >
+                    {t(s.key)}
+                  </button>
+                </Fragment>
+              ))}
+            </div>
+          </div>
+
+          {/* Un bloc par compétition */}
+          {filtered.length === 0 ? (
+            <div className="border-t border-black/10 py-16 text-center text-navy/50">
               {t('events.empty')}
             </div>
           ) : (
-            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-              {filteredEvents.map((event, idx) => (
-                <div
-                  key={event.id || idx}
-                  className="group flex flex-col overflow-hidden border border-black/10 bg-white transition-all hover:shadow-xl"
-                >
-                  <div className="relative aspect-[2.15/1] overflow-hidden bg-slate-100">
-                    <Media
-                      src={event.cover_url || getFallbackImage(event, idx)}
-                      alt={event.title}
-                      className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-
-                    <span
-                      className={`absolute left-4 top-4 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.15em] text-white ${
-                        event.status === 'finished' ? 'bg-black/60' : 'bg-sky'
-                      }`}
-                    >
-                      {t(`status.${event.status}`)}
-                    </span>
-
-                    <span className="absolute bottom-3 left-4 text-[10px] font-bold uppercase tracking-[0.18em] text-white">
-                      {t(`category.${event.category}`) || event.category}
-                    </span>
-                  </div>
-
-                  <div className="flex flex-1 flex-col p-6">
-                    <div className="flex flex-wrap items-center gap-5 text-[10px] uppercase tracking-wider text-navy/50">
-                      {event.city && (
-                        <span className="flex items-center gap-1.5">
-                          <MapPin size={12} /> {event.city}
-                        </span>
-                      )}
-                      {event.period_label && (
-                        <span className="flex items-center gap-1.5">
-                          <Calendar size={12} /> {event.period_label}
-                        </span>
-                      )}
-                    </div>
-
-                    <h3 className="mt-4 font-display text-[28px] font-bold uppercase leading-none text-navy">
-                      {event.title}
-                    </h3>
-
-                    {event.edition_label && (
-                      <p className="mt-1 font-display text-xs font-semibold uppercase tracking-wider text-sky">
-                        {event.edition_label}
-                      </p>
-                    )}
-
-                    {event.description && (
-                      <p className="mt-3 flex-1 text-[13px] leading-relaxed text-navy/70">
-                        {event.description}
-                      </p>
-                    )}
-                  </div>
-                </div>
+            <div className="space-y-14">
+              {filtered.map((event) => (
+                <EventBlock key={event.id} event={event} />
               ))}
             </div>
           )}
