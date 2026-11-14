@@ -53,9 +53,10 @@ if [ "${AUTO_MIGRATE:-true}" = "true" ]; then
     php artisan db:seed --class=Database\\Seeders\\AdminUserSeeder --force || true
 fi
 
-# Re-vérifier les permissions complètes pour www-data
-chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/database
-chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/database
+# Préparer les répertoires de stockage essentiels
+mkdir -p /var/www/html/storage/framework/sessions /var/www/html/storage/framework/views /var/www/html/storage/framework/cache /var/www/html/storage/logs /var/www/html/storage/app/public
+chmod -R 777 /var/www/html/storage /var/www/html/bootstrap/cache
+chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 if [ -f /var/www/html/database/database.sqlite ]; then
     chmod 664 /var/www/html/database/database.sqlite
 fi
