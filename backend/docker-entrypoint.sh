@@ -15,6 +15,9 @@ fi
 # Vérifier et créer le lien symbolique du stockage public
 php artisan storage:link --force || true
 
+# S'assurer que les assets Filament sont publiés
+php artisan filament:assets || true
+
 # Préparer SQLite si utilisé
 if [ "${DB_CONNECTION}" = "sqlite" ] || [ -z "${DB_CONNECTION}" ]; then
     mkdir -p /var/www/html/database
