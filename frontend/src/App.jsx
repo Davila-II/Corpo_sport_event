@@ -7,6 +7,7 @@ import Events from './pages/Events'
 import Media from './pages/Media'
 import Contact from './pages/Contact'
 import Placeholder from './pages/Placeholder'
+import EventDetail from './pages/EventDetail'
 
 export default function App() {
   return (
@@ -16,6 +17,7 @@ export default function App() {
         <Route path="a-propos" element={<About />} />
         <Route path="domaines" element={<Services />} />
         <Route path="evenements" element={<Events />} />
+        <Route path="evenements/:slug" element={<EventDetail />} />
         <Route path="mediatheque" element={<Media />} />
         <Route path="contact" element={<Contact />} />
         <Route path="*" element={<Placeholder titleKey="common.notFound" />} />
