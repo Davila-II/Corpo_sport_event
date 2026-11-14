@@ -61,7 +61,18 @@
     "legendUpcoming": "À venir",
     "legendArchives": "Archives",
     "editionsListed": "Éditions répertoriées",
-    "noEditions": "Aucune édition répertoriée pour le moment."
+    "noEditions": "Aucune édition répertoriée pour le moment.",
+    "backToAll": "Tous les événements",
+    "theCompetition": "La compétition",
+    "aboutPrefix": "À propos de",
+    "distinctions": "Distinctions",
+    "downloadDossier": "Télécharger le dossier",
+    "archivesEyebrow": "Archives",
+    "editionsWhite": "Les différentes",
+    "editionsBlue": "éditions.",
+    "dossierSub": "Dossier & palmarès officiels",
+    "aboutExtra": "Chaque édition est pensée comme une plateforme de rencontre entre collaborateurs, dirigeants, partenaires et passionnés. L’organisation couvre l’encadrement technique, la communication, la sécurité et la valorisation des performances.",
+    "competitionNotFound": "Compétition introuvable"
   },
   "media": {
     "heroEyebrow": "PHOTOS & ARCHIVES",

@@ -13,8 +13,12 @@ import { useApi } from '../lib/api'
 import PageState from '../components/PageState'
 import PageHero from '../components/PageHero'
 import Media from '../components/Media'
+import { getEventFallbackImage } from '../lib/eventImages'
 
 const CATEGORIES = ['football', 'basketball', 'futsal', 'culture']
+
+// Ces villes sont toujours proposées dans le filtre, même sans événement
+const FIXED_CITIES = ['Douala', 'Yaoundé', 'National']
 
 // Filtres de statut affichés à droite du compteur
 const STATUS_FILTERS = [
@@ -24,9 +28,9 @@ const STATUS_FILTERS = [
 ]
 
 const STATUS_BADGE = {
-  ongoing: 'bg-sky-dark',
+  ongoing: 'bg-[#087ba9]',
   upcoming: 'bg-sky',
-  finished: 'bg-[#4b5b54]',
+  finished: 'bg-[#55635d]',
 }
 
 // Recherche sans tenir compte des accents ni des majuscules
@@ -36,21 +40,6 @@ const normalize = (text = '') =>
     .replace(/[\u0300-\u036f]/g, '')
     .toLowerCase()
     .trim()
-
-// Image de secours quand aucune couverture n'est enregistrée dans l'admin
-function getFallbackImage(event) {
-  const key = `${event.slug || ''} ${event.title || ''}`.toLowerCase()
-
-  if (key.includes('foot-salle') || key.includes('futsal')) return '/accueil-5.jpeg'
-  if (key.includes('award')) return '/mediatheque/Moments Corpo Sport Event.jpg'
-  if (key.includes('corpo-foot') || key.includes('corpo foot')) return '/accueil-2.jpg'
-  if (key.includes('corpo-basket') || key.includes('corpo basket')) return '/accueil-1.jpg'
-  if (key.includes('veteran') || key.includes('champions cup')) return '/accueil-4.jpeg'
-
-  if (event.category === 'basketball') return '/accueil-1.jpg'
-  if (event.category === 'football') return '/accueil-2.jpg'
-  return '/accueil-4.jpeg'
-}
 
 function FilterSelect({ value, onChange, label, children }) {
   return (
@@ -75,6 +64,9 @@ function EventBlock({ event }) {
   const { t } = useTranslation()
   const editions = Array.isArray(event.editions) ? event.editions : []
 
+  // Page de détail de la compétition (le bouton et les éditions mènent ici)
+  const detailPath = `/evenements/${event.slug}`
+
   return (
     <article id={event.slug} className="border-t border-black/10 pt-9">
       {/* Ligne de titre : catégorie, nom, numéro d'édition */}
@@ -97,7 +89,7 @@ function EventBlock({ event }) {
         <div className="flex flex-col border-black/10 md:border-r">
           <div className="relative aspect-[1.4/1] overflow-hidden bg-forest">
             <Media
-              src={event.cover_url || getFallbackImage(event)}
+              src={event.cover_url || getEventFallbackImage(event)}
               alt={event.title}
               className="h-full w-full object-cover"
             />
@@ -141,7 +133,7 @@ function EventBlock({ event }) {
             )}
 
             <Link
-              to="/mediatheque"
+              to={detailPath}
               className="group mt-5 flex items-center justify-between border-t border-black/10 pt-4 text-[10px] font-bold text-navy transition-colors hover:text-sky"
             >
               {t('cta.viewCompetition')}
@@ -153,7 +145,7 @@ function EventBlock({ event }) {
           </div>
         </div>
 
-        {/* Éditions répertoriées */}
+        {/* Éditions répertoriées : chaque ligne ouvre la page de la compétition */}
         <div className="p-6 pt-8 md:p-8 md:pt-9">
           <p className="text-[8px] uppercase tracking-[0.2em] text-navy/45">
             {t('events.editionsListed')}
@@ -164,15 +156,23 @@ function EventBlock({ event }) {
               {editions.map((edition, i) => (
                 <li
                   key={`${edition.period}-${i}`}
-                  className="flex items-center border-t border-black/10 py-[18px]"
+                  className="border-t border-black/10"
                 >
-                  <span className="w-20 shrink-0 font-display text-2xl font-semibold leading-none text-sky sm:w-[102px]">
-                    {edition.period}
-                  </span>
-                  <span className="flex-1 text-[11px] font-bold text-navy">
-                    {edition.title}
-                  </span>
-                  <ChevronRight size={14} className="shrink-0 text-navy" />
+                  <Link
+                    to={detailPath}
+                    className="group flex items-center py-[18px] transition-colors hover:bg-mist/70"
+                  >
+                    <span className="w-20 shrink-0 font-display text-2xl font-semibold leading-none text-sky sm:w-[102px]">
+                      {edition.period}
+                    </span>
+                    <span className="flex-1 text-[11px] font-bold text-navy">
+                      {edition.title}
+                    </span>
+                    <ChevronRight
+                      size={14}
+                      className="shrink-0 text-navy transition-transform group-hover:translate-x-1"
+                    />
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -204,14 +204,14 @@ export default function Events() {
     return []
   }, [data])
 
-  // Les villes proposées dans le filtre viennent des événements eux-mêmes
-  const cities = useMemo(
-    () =>
-      [...new Set(events.map((e) => e.city).filter(Boolean))].sort((a, b) =>
-        a.localeCompare(b),
-      ),
-    [events],
-  )
+  // Douala, Yaoundé et National d'abord, puis les autres villes éventuelles
+  const cities = useMemo(() => {
+    const others = [...new Set(events.map((e) => e.city).filter(Boolean))]
+      .filter((c) => !FIXED_CITIES.includes(c))
+      .sort((a, b) => a.localeCompare(b))
+
+    return [...FIXED_CITIES, ...others]
+  }, [events])
 
   const filtered = useMemo(() => {
     const q = normalize(query)

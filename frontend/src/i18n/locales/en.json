@@ -61,7 +61,18 @@
     "legendUpcoming": "Upcoming",
     "legendArchives": "Archive",
     "editionsListed": "Listed editions",
-    "noEditions": "No editions listed yet."
+    "noEditions": "No editions listed yet.",
+    "backToAll": "All events",
+    "theCompetition": "The competition",
+    "aboutPrefix": "About",
+    "distinctions": "Awards",
+    "downloadDossier": "Download the brochure",
+    "archivesEyebrow": "Archives",
+    "editionsWhite": "The different",
+    "editionsBlue": "editions.",
+    "dossierSub": "Official brochure & honours",
+    "aboutExtra": "Each edition is designed as a meeting platform for employees, executives, partners and enthusiasts. The organisation covers technical supervision, communication, security and the promotion of performances.",
+    "competitionNotFound": "Competition not found"
   },
   "media": {
     "heroEyebrow": "PHOTOS & ARCHIVES",
