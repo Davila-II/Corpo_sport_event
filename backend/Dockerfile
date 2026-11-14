@@ -1,4 +1,4 @@
-FROM php:8.3-apache
+FROM php:8.4-apache
 
 # Installer les dépendances système
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -34,7 +34,7 @@ WORKDIR /var/www/html
 
 # Mettre en cache les dépendances Composer
 COPY composer.json composer.lock ./
-RUN composer install --no-dev --no-scripts --no-autoloader --prefer-dist
+RUN composer install --no-dev --no-scripts --no-autoloader --prefer-dist --ignore-platform-req=php+
 
 # Copier le code source de l'application
 COPY . .
