@@ -42,6 +42,9 @@ COPY . .
 # Générer l'autoloader optimisé pour la production
 RUN composer dump-autoload --optimize --no-dev
 
+# Publier les assets Filament (CSS, JS, icônes)
+RUN php artisan filament:assets
+
 # Permissions pour www-data
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
     && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache

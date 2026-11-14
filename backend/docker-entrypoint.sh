@@ -6,6 +6,12 @@ PORT="${PORT:-80}"
 sed -i "s/Listen [0-9]*/Listen ${PORT}/" /etc/apache2/ports.conf
 sed -i "s/<VirtualHost \*:[0-9]*>/<VirtualHost \*:${PORT}>/" /etc/apache2/sites-available/000-default.conf
 
+# Vérifier la validité de l'APP_KEY (doit commencer par base64:)
+if [ -z "${APP_KEY}" ] || [[ "${APP_KEY}" != base64:* ]]; then
+    echo ">> APP_KEY manquante ou invalide, génération d'une clé sécurisée..."
+    export APP_KEY=$(php artisan key:generate --show)
+fi
+
 # Vérifier et créer le lien symbolique du stockage public
 php artisan storage:link --force || true
 
@@ -13,7 +19,8 @@ php artisan storage:link --force || true
 if [ "${DB_CONNECTION}" = "sqlite" ] || [ -z "${DB_CONNECTION}" ]; then
     mkdir -p /var/www/html/database
     touch /var/www/html/database/database.sqlite
-    chown -R www-data:www-data /var/www/html/database
+    chmod 777 /var/www/html/database
+    chmod 666 /var/www/html/database/database.sqlite
 fi
 
 # Migrations automatiques
@@ -27,7 +34,15 @@ if [ "${AUTO_MIGRATE:-true}" = "true" ]; then
     fi
 fi
 
-# Mettre en cache pour des performances maximales
+# Re-vérifier les permissions complètes pour www-data
+chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/database
+chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/database
+if [ -f /var/www/html/database/database.sqlite ]; then
+    chmod 664 /var/www/html/database/database.sqlite
+fi
+
+# Recharger les caches Laravel
+php artisan config:clear || true
 php artisan config:cache || true
 php artisan route:cache || true
 php artisan view:cache || true
