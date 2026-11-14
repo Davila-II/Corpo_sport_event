@@ -2,7 +2,12 @@ import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-export const api = axios.create({ baseURL: '/api' })
+const rawBaseUrl = import.meta.env.VITE_API_URL || ''
+const normalizedBase = rawBaseUrl.replace(/\/+$/, '')
+
+export const api = axios.create({
+  baseURL: normalizedBase ? `${normalizedBase}/api` : '/api',
+})
 
 // Charge une adresse de l'API dans la langue courante (fr ou en).
 // Renvoie { data, loading, error }.

@@ -12,6 +12,14 @@ class ContactController extends Controller
     // POST /api/contact
     public function store(Request $request): JsonResponse
     {
+        // Support name or full_name, service or service_type for convenience
+        if ($request->filled('name') && ! $request->filled('full_name')) {
+            $request->merge(['full_name' => $request->input('name')]);
+        }
+        if ($request->filled('service') && ! $request->filled('service_type')) {
+            $request->merge(['service_type' => $request->input('service')]);
+        }
+
         $data = $request->validate([
             'full_name' => ['required', 'string', 'max:255'],
             'company' => ['nullable', 'string', 'max:255'],

@@ -8,6 +8,10 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        $this->call(CorpoContentSeeder::class);
+        $this->call([
+            CorpoContentSeeder::class,
+            EventEditionsSeeder::class,
+            EventDistinctionsSeeder::class,
+        ]);
     }
 }

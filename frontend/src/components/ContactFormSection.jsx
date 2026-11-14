@@ -35,10 +35,12 @@ export default function ContactFormSection({ services = [], isStandalone = true 
     try {
       await api.post('/contact', {
         name: formData.name,
+        full_name: formData.name,
         company: formData.company,
         email: formData.email,
         phone: formData.phone,
         service: formData.service_id,
+        service_type: formData.service_id,
         message: formData.project,
       })
       setSuccess(true)
