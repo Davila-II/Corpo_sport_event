@@ -49,6 +49,8 @@ services:
           property: password
       - key: SESSION_DRIVER
         value: file
+      - key: CACHE_STORE
+        value: file
       - key: AUTO_MIGRATE
         value: "true"
       - key: AUTO_SEED
