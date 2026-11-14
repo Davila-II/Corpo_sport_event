@@ -1,3 +1,9 @@
+databases:
+  - name: corpo-sport-db
+    databaseName: corpo_sport_event
+    user: corpo_user
+    plan: free
+
 services:
   - type: web
     name: corpo-sport-backend
@@ -15,13 +21,39 @@ services:
         value: "false"
       - key: APP_KEY
         value: "base64:RD1r21n6T4DBt+5Eko+2KMLEMIVCzufsBe/A96oBYeI="
+      - key: APP_URL
+        value: "https://corpo-sport-backend.onrender.com"
       - key: LOG_CHANNEL
         value: stderr
       - key: DB_CONNECTION
-        value: sqlite
+        value: pgsql
+      - key: DB_HOST
+        fromDatabase:
+          name: corpo-sport-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: corpo-sport-db
+          property: port
+      - key: DB_DATABASE
+        fromDatabase:
+          name: corpo-sport-db
+          property: database
+      - key: DB_USERNAME
+        fromDatabase:
+          name: corpo-sport-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: corpo-sport-db
+          property: password
       - key: SESSION_DRIVER
         value: file
       - key: AUTO_MIGRATE
         value: "true"
       - key: AUTO_SEED
         value: "true"
+      - key: ADMIN_EMAIL
+        value: "nyatchebe703@gmail.com"
+      - key: ADMIN_PASSWORD
+        value: "Qwertyui00"

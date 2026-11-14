@@ -26,6 +26,19 @@ if [ "${DB_CONNECTION}" = "sqlite" ] || [ -z "${DB_CONNECTION}" ]; then
     chmod 666 /var/www/html/database/database.sqlite
 fi
 
+# Attendre la disponibilité de la base de données externe (PostgreSQL / MySQL)
+if [ "${DB_CONNECTION}" = "pgsql" ] || [ "${DB_CONNECTION}" = "mysql" ]; then
+    echo ">> Vérification de la connexion à la base de données..."
+    for i in {1..20}; do
+        if php artisan db:show > /dev/null 2>&1; then
+            echo ">> Connexion à la base de données réussie !"
+            break
+        fi
+        echo ">> En attente de la base de données ($i/20)..."
+        sleep 2
+    done
+fi
+
 # Migrations automatiques
 if [ "${AUTO_MIGRATE:-true}" = "true" ]; then
     echo ">> Exécution des migrations..."
@@ -35,6 +48,9 @@ if [ "${AUTO_MIGRATE:-true}" = "true" ]; then
         echo ">> Exécution des seeders..."
         php artisan db:seed --force || true
     fi
+
+    # Création automatique garantie du compte administrateur
+    php artisan db:seed --class=Database\\Seeders\\AdminUserSeeder --force || true
 fi
 
 # Re-vérifier les permissions complètes pour www-data
