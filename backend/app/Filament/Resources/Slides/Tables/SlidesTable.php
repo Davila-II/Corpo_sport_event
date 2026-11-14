@@ -18,7 +18,7 @@ class SlidesTable
             ->columns([
                 ImageColumn::make('image')
                     ->label('Image')
-                    ->disk('public'),
+                    ->disk('supabase'),
                 TextColumn::make('title_white')
                     ->label('Titre')
                     ->getStateUsing(fn ($record) => trim(

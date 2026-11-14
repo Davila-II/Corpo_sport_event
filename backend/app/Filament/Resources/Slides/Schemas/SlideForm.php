@@ -64,7 +64,7 @@ class SlideForm
                         FileUpload::make('image')
                             ->label('Image de fond')
                             ->image()
-                            ->disk('public')
+                            ->disk('supabase')
                             ->directory('slides')
                             ->visibility('public')
                             ->columnSpanFull(),

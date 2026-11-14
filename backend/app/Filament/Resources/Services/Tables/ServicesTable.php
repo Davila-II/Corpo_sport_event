@@ -18,7 +18,7 @@ class ServicesTable
             ->columns([
                 ImageColumn::make('image')
                     ->label('Image')
-                    ->disk('public'),
+                    ->disk('supabase'),
                 TextColumn::make('title')
                     ->label('Titre')
                     ->getStateUsing(fn ($record) => $record->localized('title', 'fr')),

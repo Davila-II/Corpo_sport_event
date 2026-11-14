@@ -143,7 +143,7 @@ class ManageSettings extends Page
                     FileUpload::make('impact.image')
                         ->label('Image du bloc')
                         ->image()
-                        ->disk('public')
+                        ->disk('supabase')
                         ->directory('settings')
                         ->visibility('public'),
                 ]),
@@ -165,7 +165,7 @@ class ManageSettings extends Page
                     FileUpload::make('president.photo')
                         ->label('Photo du président')
                         ->image()
-                        ->disk('public')
+                        ->disk('supabase')
                         ->directory('settings')
                         ->visibility('public'),
                 ]),

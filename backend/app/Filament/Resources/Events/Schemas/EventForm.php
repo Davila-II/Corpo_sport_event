@@ -154,7 +154,7 @@ class EventForm
                         FileUpload::make('dossier')
                             ->label('Dossier à télécharger (PDF, optionnel : sans fichier, le bouton télécharge la présentation générale)')
                             ->acceptedFileTypes(['application/pdf'])
-                            ->disk('public')
+                            ->disk('supabase')
                             ->directory('dossiers')
                             ->visibility('public'),
                     ]),
@@ -165,7 +165,7 @@ class EventForm
                         FileUpload::make('cover_image')
                             ->label('Image de couverture')
                             ->image()
-                            ->disk('public')
+                            ->disk('supabase')
                             ->directory('events')
                             ->visibility('public'),
                         Toggle::make('show_on_home')

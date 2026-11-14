@@ -65,7 +65,7 @@ class MediaGroupForm
                         FileUpload::make('cover_image')
                             ->label('Image de couverture')
                             ->image()
-                            ->disk('public')
+                            ->disk('supabase')
                             ->directory('media-groups')
                             ->visibility('public')
                             ->columnSpanFull(),
@@ -89,7 +89,7 @@ class MediaGroupForm
                                     ->label('Photo')
                                     ->image()
                                     ->required()
-                                    ->disk('public')
+                                    ->disk('supabase')
                                     ->directory('media-items')
                                     ->visibility('public')
                                     ->columnSpanFull(),

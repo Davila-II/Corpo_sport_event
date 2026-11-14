@@ -18,7 +18,7 @@ class PartnersTable
             ->columns([
                 ImageColumn::make('logo')
                     ->label('Logo')
-                    ->disk('public'),
+                    ->disk('supabase'),
                 TextColumn::make('name')
                     ->label('Nom')
                     ->searchable(),

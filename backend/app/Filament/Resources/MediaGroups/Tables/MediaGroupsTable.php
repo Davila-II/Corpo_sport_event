@@ -19,7 +19,7 @@ class MediaGroupsTable
             ->columns([
                 ImageColumn::make('cover_image')
                     ->label('Couverture')
-                    ->disk('public'),
+                    ->disk('supabase'),
                 TextColumn::make('title')
                     ->label('Titre')
                     ->getStateUsing(fn ($record) => $record->localized('title', 'fr'))

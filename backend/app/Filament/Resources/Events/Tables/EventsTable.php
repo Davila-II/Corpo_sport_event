@@ -20,7 +20,7 @@ class EventsTable
             ->columns([
                 ImageColumn::make('cover_image')
                     ->label('Image')
-                    ->disk('public'),
+                    ->disk('supabase'),
                 TextColumn::make('title')
                     ->label('Titre')
                     // "title" est un tableau FR/EN : on affiche la version française
