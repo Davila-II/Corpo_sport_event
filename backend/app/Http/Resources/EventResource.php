@@ -10,6 +10,8 @@ class EventResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
+        $locale = app()->getLocale();
+
         return [
             'id' => $this->id,
             'slug' => $this->slug,
@@ -23,8 +25,15 @@ class EventResource extends JsonResource
             'cover_url' => $this->cover_url,
             // Éditions répertoriées, déjà traduites dans la langue demandée
             'editions' => array_values(
-                Localizer::localize($this->editions ?? [], app()->getLocale())
+                Localizer::localize($this->editions ?? [], $locale)
             ),
+            // Distinctions : simple liste de textes
+            'distinctions' => array_values(array_filter(
+                Localizer::localize($this->distinctions ?? [], $locale),
+                fn ($item) => filled($item)
+            )),
+            // Dossier PDF propre à la compétition (null s'il n'y en a pas)
+            'dossier_url' => $this->dossier_url,
         ];
     }
 }

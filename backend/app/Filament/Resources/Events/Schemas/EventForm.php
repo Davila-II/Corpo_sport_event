@@ -88,10 +88,14 @@ class EventForm
                             ])
                             ->default('upcoming')
                             ->required(),
-                        TextInput::make('city')
+                        Select::make('city')
                             ->label('Ville')
-                            ->placeholder('Douala')
-                            ->maxLength(100),
+                            ->options([
+                                'Douala' => 'Douala',
+                                'Yaoundé' => 'Yaoundé',
+                                'National' => 'National',
+                            ])
+                            ->placeholder('Choisir une ville'),
                         TextInput::make('period_label')
                             ->label('Période (ex : Saison 2025)')
                             ->maxLength(100),
@@ -101,7 +105,7 @@ class EventForm
                             ->default(0),
                     ]),
 
-                Section::make('Éditions répertoriées (page Événements)')
+                Section::make('Éditions répertoriées (page Événements et page de la compétition)')
                     ->columnSpanFull()
                     ->schema([
                         Repeater::make('editions')
@@ -126,6 +130,33 @@ class EventForm
                                     ->label('Title (EN)')
                                     ->maxLength(255),
                             ]),
+                    ]),
+
+                Section::make('Page de la compétition')
+                    ->columnSpanFull()
+                    ->schema([
+                        Repeater::make('distinctions')
+                            ->label('Distinctions (carte à droite de la page)')
+                            ->addActionLabel('Ajouter une distinction')
+                            ->defaultItems(0)
+                            ->maxItems(8)
+                            ->itemLabel(fn (array $state): ?string => $state['fr'] ?? null)
+                            ->columns(2)
+                            ->schema([
+                                TextInput::make('fr')
+                                    ->label('Français')
+                                    ->required()
+                                    ->maxLength(120),
+                                TextInput::make('en')
+                                    ->label('English')
+                                    ->maxLength(120),
+                            ]),
+                        FileUpload::make('dossier')
+                            ->label('Dossier à télécharger (PDF, optionnel : sans fichier, le bouton télécharge la présentation générale)')
+                            ->acceptedFileTypes(['application/pdf'])
+                            ->disk('public')
+                            ->directory('dossiers')
+                            ->visibility('public'),
                     ]),
 
                 Section::make('Image et publication')

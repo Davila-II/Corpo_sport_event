@@ -13,8 +13,8 @@ class Event extends Model
 
     protected $fillable = [
         'slug', 'title', 'description', 'category', 'status', 'city',
-        'period_label', 'edition_label', 'editions', 'cover_image',
-        'show_on_home', 'is_published', 'sort_order',
+        'period_label', 'edition_label', 'editions', 'distinctions', 'dossier',
+        'cover_image', 'show_on_home', 'is_published', 'sort_order',
     ];
 
     protected $casts = [
@@ -22,16 +22,24 @@ class Event extends Model
         'description' => 'array',
         'edition_label' => 'array',
         'editions' => 'array',
+        'distinctions' => 'array',
         'show_on_home' => 'boolean',
         'is_published' => 'boolean',
     ];
 
-    protected $appends = ['cover_url'];
+    protected $appends = ['cover_url', 'dossier_url'];
 
     public function getCoverUrlAttribute(): ?string
     {
         return $this->cover_image
             ? Storage::disk('public')->url($this->cover_image)
+            : null;
+    }
+
+    public function getDossierUrlAttribute(): ?string
+    {
+        return $this->dossier
+            ? Storage::disk('public')->url($this->dossier)
             : null;
     }
 
