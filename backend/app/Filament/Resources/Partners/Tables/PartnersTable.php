@@ -18,7 +18,8 @@ class PartnersTable
             ->columns([
                 ImageColumn::make('logo')
                     ->label('Logo')
-                    ->disk(config('filesystems.default')),
+                    ->disk(config('filesystems.default'))
+                    ->checkFileExistence(false),
                 TextColumn::make('name')
                     ->label('Nom')
                     ->searchable(),

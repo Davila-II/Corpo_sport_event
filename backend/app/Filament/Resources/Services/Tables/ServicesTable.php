@@ -18,7 +18,8 @@ class ServicesTable
             ->columns([
                 ImageColumn::make('image')
                     ->label('Image')
-                    ->disk(config('filesystems.default')),
+                    ->disk(config('filesystems.default'))
+                    ->checkFileExistence(false),
                 TextColumn::make('title')
                     ->label('Titre')
                     ->getStateUsing(fn ($record) => $record->localized('title', 'fr')),

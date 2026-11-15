@@ -18,7 +18,8 @@ class SlidesTable
             ->columns([
                 ImageColumn::make('image')
                     ->label('Image')
-                    ->disk(config('filesystems.default')),
+                    ->disk(config('filesystems.default'))
+                    ->checkFileExistence(false),
                 TextColumn::make('title_white')
                     ->label('Titre')
                     ->getStateUsing(fn ($record) => trim(

@@ -20,7 +20,8 @@ class EventsTable
             ->columns([
                 ImageColumn::make('cover_image')
                     ->label('Image')
-                    ->disk(config('filesystems.default')),
+                    ->disk(config('filesystems.default'))
+                    ->checkFileExistence(false),
                 TextColumn::make('title')
                     ->label('Titre')
                     // "title" est un tableau FR/EN : on affiche la version française
