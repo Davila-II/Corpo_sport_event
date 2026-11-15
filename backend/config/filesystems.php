@@ -72,6 +72,10 @@ return [
             'visibility' => 'public',
             'throw' => true,
             'report' => true,
+            // Supabase ne gère pas les sommes de contrôle ajoutées par défaut par le SDK AWS :
+            // sans ces deux lignes, les fichiers arrivent vides (0 octet)
+            'request_checksum_calculation' => 'when_required',
+            'response_checksum_validation' => 'when_required',
         ],
 
     ],
