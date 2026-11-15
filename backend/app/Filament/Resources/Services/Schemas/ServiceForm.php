@@ -57,7 +57,7 @@ class ServiceForm
                         FileUpload::make('image')
                             ->label('Image')
                             ->image()
-                            ->disk('supabase')
+                            ->disk(config('filesystems.default'))
                             ->directory('services')
                             ->visibility('public')
                             ->columnSpanFull(),

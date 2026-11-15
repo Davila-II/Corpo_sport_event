@@ -29,7 +29,7 @@ class PartnerForm
                         FileUpload::make('logo')
                             ->label('Logo (optionnel : sans logo, le nom s\'affiche en texte)')
                             ->image()
-                            ->disk('supabase')
+                            ->disk(config('filesystems.default'))
                             ->directory('partners')
                             ->visibility('public')
                             ->columnSpanFull(),
