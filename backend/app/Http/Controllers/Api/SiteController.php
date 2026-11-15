@@ -31,7 +31,7 @@ class SiteController extends Controller
         $rawImpact = Setting::get('impact', []);
         $impact = Localizer::localize($rawImpact, $locale);
         $impact['image_url'] = ! empty($rawImpact['image'])
-            ? Storage::disk('public')->url($rawImpact['image'])
+            ? Storage::disk(config('filesystems.default'))->url($rawImpact['image'])
             : null;
         unset($impact['image']);
 
@@ -55,7 +55,7 @@ class SiteController extends Controller
         $rawPresident = Setting::get('president', []);
         $president = Localizer::localize($rawPresident, $locale);
         $president['photo_url'] = ! empty($rawPresident['photo'])
-            ? Storage::disk('public')->url($rawPresident['photo'])
+            ? Storage::disk(config('filesystems.default'))->url($rawPresident['photo'])
             : null;
         unset($president['photo']);
 

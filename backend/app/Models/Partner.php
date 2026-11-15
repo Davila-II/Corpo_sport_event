@@ -19,7 +19,7 @@ class Partner extends Model
     public function getLogoUrlAttribute(): ?string
     {
         return $this->logo
-            ? Storage::disk('public')->url($this->logo)
+            ? Storage::disk(config('filesystems.default'))->url($this->logo)
             : null;
     }
 

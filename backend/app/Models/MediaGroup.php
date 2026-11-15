@@ -33,7 +33,7 @@ class MediaGroup extends Model
     public function getCoverUrlAttribute(): ?string
     {
         return $this->cover_image
-            ? Storage::disk('public')->url($this->cover_image)
+            ? Storage::disk(config('filesystems.default'))->url($this->cover_image)
             : null;
     }
 
