@@ -67,6 +67,9 @@ return [
             'region' => env('SUPABASE_S3_REGION', 'eu-west-1'),
             'bucket' => env('SUPABASE_S3_BUCKET', 'corpo-sport-media'),
             'endpoint' => env('SUPABASE_S3_ENDPOINT', 'https://uprduytbpeanamxldrqd.supabase.co/storage/v1/s3'),
+            'http' => [
+                'proxy' => env('SUPABASE_S3_PROXY'),
+            ],
             'use_path_style_endpoint' => true,
             'url' => env('SUPABASE_STORAGE_URL', 'https://uprduytbpeanamxldrqd.supabase.co/storage/v1/object/public/corpo-sport-media'),
             'visibility' => 'public',
