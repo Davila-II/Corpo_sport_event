@@ -43,8 +43,8 @@ return [
             'root' => storage_path('app/public'),
             'url' => rtrim(env('APP_URL', 'http://localhost'), '/').'/storage',
             'visibility' => 'public',
-            'throw' => false,
-            'report' => false,
+            'throw' => true,
+            'report' => true,
         ],
 
         's3' => [
@@ -70,8 +70,8 @@ return [
             'use_path_style_endpoint' => true,
             'url' => env('SUPABASE_STORAGE_URL', 'https://uprduytbpeanamxldrqd.supabase.co/storage/v1/object/public/corpo-sport-media'),
             'visibility' => 'public',
-            'throw' => false,
-            'report' => false,
+            'throw' => true,
+            'report' => true,
         ],
 
     ],
