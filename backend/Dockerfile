@@ -21,6 +21,9 @@ RUN install-php-extensions \
     gd \
     opcache
 
+# Configurer PHP pour les uploads et la mémoire
+RUN echo "upload_max_filesize = 50M\npost_max_size = 50M\nmemory_limit = 256M" > /usr/local/etc/php/conf.d/uploads.ini
+
 # Installer Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
