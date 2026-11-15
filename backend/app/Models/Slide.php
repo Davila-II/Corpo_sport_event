@@ -3,13 +3,13 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasLocalizedFields;
+use App\Models\Concerns\HasMediaUrls;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Storage;
 
 class Slide extends Model
 {
-    use HasLocalizedFields;
+    use HasLocalizedFields, HasMediaUrls;
 
     protected $fillable = [
         'eyebrow', 'title_white', 'title_blue', 'subtitle',
@@ -28,9 +28,7 @@ class Slide extends Model
 
     public function getImageUrlAttribute(): ?string
     {
-        return $this->image
-            ? Storage::disk(config('filesystems.default'))->url($this->image)
-            : null;
+        return $this->resolveMediaUrl($this->image);
     }
 
     public function scopeActive(Builder $query): Builder

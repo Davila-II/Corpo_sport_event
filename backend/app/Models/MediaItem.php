@@ -3,13 +3,13 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasLocalizedFields;
+use App\Models\Concerns\HasMediaUrls;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Facades\Storage;
 
 class MediaItem extends Model
 {
-    use HasLocalizedFields;
+    use HasLocalizedFields, HasMediaUrls;
 
     protected $fillable = ['media_group_id', 'image', 'caption', 'sort_order'];
 
@@ -27,8 +27,6 @@ class MediaItem extends Model
 
     public function getImageUrlAttribute(): ?string
     {
-        return $this->image
-            ? Storage::disk(config('filesystems.default'))->url($this->image)
-            : null;
+        return $this->resolveMediaUrl($this->image);
     }
 }

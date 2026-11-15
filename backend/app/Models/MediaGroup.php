@@ -3,14 +3,14 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasLocalizedFields;
+use App\Models\Concerns\HasMediaUrls;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Facades\Storage;
 
 class MediaGroup extends Model
 {
-    use HasLocalizedFields;
+    use HasLocalizedFields, HasMediaUrls;
 
     protected $fillable = [
         'title', 'category', 'period_label', 'cover_image',
@@ -32,9 +32,7 @@ class MediaGroup extends Model
 
     public function getCoverUrlAttribute(): ?string
     {
-        return $this->cover_image
-            ? Storage::disk(config('filesystems.default'))->url($this->cover_image)
-            : null;
+        return $this->resolveMediaUrl($this->cover_image);
     }
 
     public function scopePublished(Builder $query): Builder

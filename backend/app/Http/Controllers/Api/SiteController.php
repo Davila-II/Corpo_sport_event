@@ -30,9 +30,7 @@ class SiteController extends Controller
         // Bloc "Notre impact" : on transforme le chemin de l'image en lien complet
         $rawImpact = Setting::get('impact', []);
         $impact = Localizer::localize($rawImpact, $locale);
-        $impact['image_url'] = ! empty($rawImpact['image'])
-            ? Storage::disk(config('filesystems.default'))->url($rawImpact['image'])
-            : null;
+        $impact['image_url'] = self::resolveUrl($rawImpact['image'] ?? null);
         unset($impact['image']);
 
         return response()->json([
@@ -54,9 +52,7 @@ class SiteController extends Controller
 
         $rawPresident = Setting::get('president', []);
         $president = Localizer::localize($rawPresident, $locale);
-        $president['photo_url'] = ! empty($rawPresident['photo'])
-            ? Storage::disk(config('filesystems.default'))->url($rawPresident['photo'])
-            : null;
+        $president['photo_url'] = self::resolveUrl($rawPresident['photo'] ?? null);
         unset($president['photo']);
 
         return response()->json([
@@ -95,5 +91,29 @@ class SiteController extends Controller
             'site' => Localizer::localize(Setting::get('site', []), $locale),
             'contact' => Localizer::localize(Setting::get('contact', []), $locale),
         ]);
+    }
+
+    private static function resolveUrl(?string $path): ?string
+    {
+        if (blank($path)) {
+            return null;
+        }
+
+        if (filter_var($path, FILTER_VALIDATE_URL) || str_starts_with($path, 'data:')) {
+            return $path;
+        }
+
+        $diskName = config('filesystems.default', 'public');
+
+        try {
+            return Storage::disk($diskName)->url($path);
+        } catch (\Throwable $e) {
+            $supabaseUrl = config('filesystems.disks.supabase.url');
+            if ($diskName === 'supabase' && filled($supabaseUrl)) {
+                return rtrim($supabaseUrl, '/') . '/' . ltrim($path, '/');
+            }
+
+            return null;
+        }
     }
 }

@@ -3,13 +3,13 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasLocalizedFields;
+use App\Models\Concerns\HasMediaUrls;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Storage;
 
 class Service extends Model
 {
-    use HasLocalizedFields;
+    use HasLocalizedFields, HasMediaUrls;
 
     // "bullets" = les puces, saisies une par ligne dans l'admin (FR et EN)
     protected $fillable = [
@@ -27,9 +27,7 @@ class Service extends Model
 
     public function getImageUrlAttribute(): ?string
     {
-        return $this->image
-            ? Storage::disk(config('filesystems.default'))->url($this->image)
-            : null;
+        return $this->resolveMediaUrl($this->image);
     }
 
     public function scopePublished(Builder $query): Builder

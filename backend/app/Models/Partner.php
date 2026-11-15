@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasMediaUrls;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Storage;
 
 class Partner extends Model
 {
+    use HasMediaUrls;
     protected $fillable = ['name', 'logo', 'is_published', 'sort_order'];
 
     protected $casts = [
@@ -18,9 +19,7 @@ class Partner extends Model
 
     public function getLogoUrlAttribute(): ?string
     {
-        return $this->logo
-            ? Storage::disk(config('filesystems.default'))->url($this->logo)
-            : null;
+        return $this->resolveMediaUrl($this->logo);
     }
 
     public function scopePublished(Builder $query): Builder

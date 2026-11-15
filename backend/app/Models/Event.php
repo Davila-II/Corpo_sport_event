@@ -3,13 +3,13 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasLocalizedFields;
+use App\Models\Concerns\HasMediaUrls;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Storage;
 
 class Event extends Model
 {
-    use HasLocalizedFields;
+    use HasLocalizedFields, HasMediaUrls;
 
     protected $fillable = [
         'slug', 'title', 'description', 'category', 'status', 'city',
@@ -31,16 +31,12 @@ class Event extends Model
 
     public function getCoverUrlAttribute(): ?string
     {
-        return $this->cover_image
-            ? Storage::disk(config('filesystems.default'))->url($this->cover_image)
-            : null;
+        return $this->resolveMediaUrl($this->cover_image);
     }
 
     public function getDossierUrlAttribute(): ?string
     {
-        return $this->dossier
-            ? Storage::disk(config('filesystems.default'))->url($this->dossier)
-            : null;
+        return $this->resolveMediaUrl($this->dossier);
     }
 
     public function scopePublished(Builder $query): Builder
