@@ -34,7 +34,7 @@ WORKDIR /var/www/html
 
 # Mettre en cache les dépendances Composer
 COPY composer.json composer.lock ./
-RUN composer install --no-dev --no-scripts --no-autoloader --prefer-dist --ignore-platform-req=php+
+RUN composer update --no-dev --no-scripts --no-autoloader --prefer-dist --ignore-platform-req=php+
 
 # Copier le code source de l'application
 COPY . .
