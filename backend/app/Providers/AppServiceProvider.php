@@ -4,7 +4,6 @@ namespace App\Providers;
 
 use Filament\Forms\Components\FileUpload;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
@@ -30,8 +29,9 @@ class AppServiceProvider extends ServiceProvider
         }
 
         // Enregistrement des images envoyées depuis l'admin (tous les champs FileUpload).
-        // Même résultat que Filament par défaut, mais explicite et avec des traces
-        // dans storage/logs/laravel.log pour voir la taille à chaque étape.
+        // Le fichier est envoyé à Supabase depuis un flux ouvert, avec la visibilité
+        // demandée par le champ. La taille source et la taille d'arrivée sont notées
+        // dans le journal pour vérifier chaque upload.
         FileUpload::configureUsing(function (FileUpload $component): void {
             $component->saveUploadedFileUsing(function (FileUpload $component, TemporaryUploadedFile $file): ?string {
                 $diskName = $component->getDiskName();
@@ -65,29 +65,5 @@ class AppServiceProvider extends ServiceProvider
                 return $path;
             });
         });
-
-        // Page de test, uniquement sur ton ordinateur (jamais en ligne)
-        if (app()->environment('local')) {
-            Route::get('/diag-upload', function () {
-                $disk = Storage::disk(config('filesystems.default'));
-                $tmp = tempnam(sys_get_temp_dir(), 'diag');
-                file_put_contents($tmp, random_bytes(300000));
-
-                $stream = fopen($tmp, 'rb');
-                $disk->put('diag/web.jpg', $stream);
-                fclose($stream);
-
-                $result = [
-                    'taille_source' => filesize($tmp),
-                    'taille_sur_le_disque' => $disk->size('diag/web.jpg'),
-                    'sapi' => PHP_SAPI,
-                ];
-
-                $disk->delete('diag/web.jpg');
-                unlink($tmp);
-
-                return response()->json($result);
-            });
-        }
     }
 }
